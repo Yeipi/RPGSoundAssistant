@@ -1,6 +1,6 @@
 # 🚀 Setup Instructions - RPG Sound Assistant
 
-Esta guía te ayudará a configurar el proyecto en tu entorno local paso a paso.
+Esta guía te ayudará a configurar el proyecto en tu entorno local paso a paso, incluyendo todas las correcciones y mejoras implementadas.
 
 ## 📋 Requisitos Previos
 
@@ -8,11 +8,19 @@ Esta guía te ayudará a configurar el proyecto en tu entorno local paso a paso.
 - **npm** (incluido con Node.js) o **yarn**
 - **Cuenta de Spotify** (opcional, pero recomendado)
 - **Editor de código** (recomendado: VS Code)
+- **Git** (para clonar el repositorio)
 
 ## 🏗️ Pasos de Instalación
 
-### 1. Crear el Proyecto
+### 1. Clonar o Crear el Proyecto
 
+#### Opción A: Clonar desde GitHub
+```bash
+git clone https://github.com/Yeipi/RPGSoundAssistant.git
+cd RPGSoundAssistant
+```
+
+#### Opción B: Crear nuevo proyecto React
 ```bash
 # Crear nuevo proyecto React
 npx create-react-app rpg-sound-assistant
@@ -24,7 +32,7 @@ npm install lucide-react
 
 ### 2. Configurar la Estructura de Carpetas
 
-Crea la siguiente estructura de carpetas en `src/`:
+Si creaste el proyecto desde cero, crea la siguiente estructura en `src/`:
 
 ```
 src/
@@ -75,34 +83,55 @@ module.exports = {
 }
 ```
 
-### 4. Copiar los Archivos
+### 4. Copiar los Archivos del Proyecto
 
-Copia cada archivo de los artifacts proporcionados en su ubicación correspondiente:
-
-#### Archivos de Configuración:
+#### Archivos de Configuración (raíz del proyecto):
 - `package.json` → raíz del proyecto
-- `.env` → raíz del proyecto (renombrar a `.env.local`)
+- `.gitignore` → raíz del proyecto
+- `README.md` → raíz del proyecto
+
+#### Archivos de Código Principal:
 - `src/index.css` → reemplazar el existente
 - `src/index.js` → reemplazar el existente
+- `src/App.jsx` → reemplazar el existente
 
-#### Archivos de Código:
+#### Archivos de Configuración y Utilidades:
 - `src/utils/constants.js`
 - `src/config/spotify.js`
+
+#### Servicios:
 - `src/services/spotifyAPI.js`
 - `src/services/audioService.js`
+
+#### Hooks:
 - `src/hooks/useSoundButtons.js`
 - `src/hooks/useAudioPlayer.js`
 - `src/hooks/useSpotify.js`
+
+#### Componentes:
 - `src/components/Header/Header.jsx`
 - `src/components/PlayerControls/PlayerControls.jsx`
 - `src/components/SoundButton/SoundButton.jsx`
 - `src/components/SpotifySearch/SpotifySearch.jsx`
 - `src/components/ButtonModal/ButtonModal.jsx`
-- `src/App.jsx` → reemplazar el existente
 
-### 5. Configurar Spotify (Opcional pero Recomendado)
+### 5. Configurar Variables de Entorno
 
-#### 5.1 Crear Aplicación en Spotify
+#### 5.1 Crear archivo .env.local
+
+Copia el archivo `.env.example` a `.env.local`:
+```bash
+cp .env.example .env.local
+```
+
+O crea `.env.local` manualmente:
+```bash
+# Spotify Integration Configuration
+REACT_APP_SPOTIFY_CLIENT_ID=tu_client_id_aqui
+REACT_APP_REDIRECT_URI=http://127.0.0.1:3000
+```
+
+#### 5.2 Configurar Aplicación en Spotify (Opcional pero Recomendado)
 
 1. Ve a [Spotify Developer Dashboard](https://developer.spotify.com/dashboard)
 2. Inicia sesión con tu cuenta de Spotify
@@ -114,16 +143,9 @@ Copia cada archivo de los artifacts proporcionados en su ubicación correspondie
    - **Redirect URI**: `http://127.0.0.1:3000`
 5. Acepta los términos y crea la app
 6. Copia el **Client ID**
+7. Pégalo en `.env.local` reemplazando `tu_client_id_aqui`
 
-#### 5.2 Configurar Variables de Entorno
-
-Edita el archivo `.env.local`:
-```bash
-REACT_APP_SPOTIFY_CLIENT_ID=tu_client_id_aqui
-REACT_APP_REDIRECT_URI=http://127.0.0.1:3000
-```
-
-### 6. Ejecutar el Proyecto
+### 6. Instalar Dependencias y Ejecutar
 
 ```bash
 # Instalar todas las dependencias
@@ -133,7 +155,7 @@ npm install
 npm start
 ```
 
-El proyecto se abrirá automáticamente en `http://127.0.0.1:3000`
+El proyecto se abrirá automáticamente en `http://localhost:3000`, pero deberás acceder mediante `http://127.0.0.1:3000` para que Spotify funcione correctamente.
 
 ## 🔧 Configuración Adicional
 
@@ -157,6 +179,18 @@ set PORT=3001 && npm start
 
 # En macOS/Linux
 PORT=3001 npm start
+```
+
+### Configurar Git (Recomendado)
+
+```bash
+# Configurar terminaciones de línea para compatibilidad multiplataforma
+git config --global core.autocrlf true
+
+# Inicializar repositorio Git (si no clonaste)
+git init
+git add .
+git commit -m "Initial commit: RPG Sound Assistant"
 ```
 
 ## 🎵 Configuración de Audio Local
@@ -192,22 +226,34 @@ PORT=3001 npm start
 ### Error: "Module not found"
 ```bash
 # Limpiar cache e instalar dependencias
-npm ci
+rm -rf node_modules package-lock.json
+npm install
 ```
 
 ### Error: "Cannot read property of undefined"
 - Verificar que todos los archivos estén en las ubicaciones correctas
 - Revisar que los imports en cada archivo sean correctos
+- Asegurar que los nombres de archivos coincidan exactamente
 
 ### Spotify no conecta
-- Verificar que el Client ID esté configurado correctamente
-- Comprobar que la Redirect URI coincida exactamente
-- Asegurar que estés usando HTTPS si es necesario
+- Verificar que el Client ID esté configurado correctamente en `.env.local`
+- **IMPORTANTE**: Usar `http://127.0.0.1:3000` en lugar de `localhost` (Spotify ya no permite localhost)
+- Comprobar que la Redirect URI coincida exactamente en Spotify Dashboard (`http://127.0.0.1:3000`)
+- Asegurar que estés accediendo a la app desde `http://127.0.0.1:3000`
+- Verificar que no haya errores en la consola del navegador
 
 ### Audio no reproduce
 - Verificar que los archivos de audio estén en `public/audio/`
 - Comprobar que las URLs sean correctas (relativas a `public/`)
-- Para Spotify: asegurar que tienes cuenta Premium
+- Para Spotify: asegurar que tienes cuenta **Premium**
+- Verificar que el navegador permita autoplay (interactuar con la página primero)
+
+### Warnings de Git sobre CRLF/LF
+```bash
+# Configurar Git para manejar terminaciones de línea automáticamente
+git config --global core.autocrlf true
+```
+Estos warnings son normales y no afectan la funcionalidad.
 
 ## 📱 Desarrollo Mobile
 
@@ -226,22 +272,41 @@ Para probar en dispositivos móviles:
    - URL: `http://TU_IP:3000`
    - Ejemplo: `http://192.168.1.100:3000`
 
+## 🔒 Consideraciones de Seguridad
+
+### Variables de Entorno
+- **NUNCA** commitees archivos `.env*` al repositorio
+- Usa `.env.example` como template para otros desarrolladores
+- El `.gitignore` incluido protege automáticamente estos archivos
+
+### Spotify Integration
+- El Client ID **NO es secreto** y puede ser público
+- **NO hay Client Secret** en aplicaciones frontend (esto es normal)
+- La autenticación usa PKCE (Proof Key for Code Exchange) que es seguro
+
 ## 🎯 Próximos Pasos
 
 1. **Probar la aplicación**:
    - Crear tu primer botón de sonido
-   - Conectar con Spotify
-   - Probar reproducción de audio
+   - Conectar con Spotify (requiere Premium para reproducción)
+   - Probar reproducción de audio local
 
 2. **Personalizar**:
    - Agregar tus propios archivos de audio
-   - Crear botones para tus escenarios favoritos
+   - Crear botones para tus escenarios favoritos de RPG
    - Configurar colores y nombres descriptivos
 
-3. **Expandir**:
-   - Agregar más funcionalidades
+3. **Expandir funcionalidades**:
+   - Agregar más tipos de botones
    - Crear presets para diferentes campañas
-   - Implementar shortcuts de teclado
+   - Implementar shortcuts de teclado personalizados
+
+## 📚 Recursos Adicionales
+
+- [Documentación de React](https://reactjs.org/docs)
+- [Spotify Web API Documentation](https://developer.spotify.com/documentation/web-api)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Lucide React Icons](https://lucide.dev/icons)
 
 ## 📧 Soporte
 
@@ -251,5 +316,28 @@ Si tienes problemas durante la configuración:
 2. Verifica que todos los archivos estén en las ubicaciones correctas
 3. Comprueba la consola del navegador para errores específicos
 4. Asegúrate de que todas las dependencias estén instaladas
+5. Revisa que las variables de entorno estén configuradas correctamente
 
-¡Disfruta creando ambientes épicos para tus sesiones de RPG! 🎲🎵
+## 🎲 ¡Disfruta creando ambientes épicos para tus sesiones de RPG!
+
+---
+
+### 📝 Notas de la Versión Actual
+
+**Características implementadas:**
+- ✅ Integración completa con Spotify (Web API + Web Playback SDK)
+- ✅ Reproducción de audio local
+- ✅ Control avanzado de pausa/resume
+- ✅ Búsqueda automática en Spotify
+- ✅ Interfaz responsiva y moderna
+- ✅ Gestión de playlists
+- ✅ Control de volumen unificado
+- ✅ Manejo robusto de errores
+
+**Correcciones incluidas:**
+- 🔧 Flujo de autenticación Spotify con PKCE
+- 🔧 Gestión de tokens y renovación automática
+- 🔧 Control mejorado de estado de reproducción
+- 🔧 Sincronización entre audio local y Spotify
+- 🔧 Manejo de errores de red y permisos
+- 🔧 Compatibilidad multiplataforma (Windows/Mac/Linux)
